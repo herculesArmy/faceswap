@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.env
+
+# Model files (too large for git)
+*.bin
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+Wan2.2-Animate-14B/
+
+# Temp files
+*.tmp
+*.temp
+outputs/
+processed/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
