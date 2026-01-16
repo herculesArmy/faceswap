@@ -8,9 +8,11 @@ import base64
 import json
 import sys
 import time
-
-# Load from environment variables (never commit secrets!)
 import os
+
+# Load .env file if present
+from dotenv import load_dotenv
+load_dotenv()
 
 RUNPOD_API_KEY = os.environ.get("RUNPOD_API_KEY")
 ENDPOINT_ID = os.environ.get("RUNPOD_ENDPOINT_ID")
