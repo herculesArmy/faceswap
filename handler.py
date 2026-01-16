@@ -10,9 +10,37 @@ import base64
 import requests
 from pathlib import Path
 
-# Paths
-MODEL_DIR = Path("/workspace/Wan2.2-Animate-14B")
+# Paths - Model stored on network volume for persistence
+MODEL_DIR = Path(os.environ.get("MODEL_DIR", "/runpod-volume/Wan2.2-Animate-14B"))
 WAN_DIR = Path("/workspace/Wan2.2")
+
+def ensure_model_downloaded():
+    """Download model to network volume if not present."""
+    marker_file = MODEL_DIR / ".download_complete"
+
+    if marker_file.exists():
+        print("Model already downloaded.")
+        return
+
+    print("Model not found. Downloading to network volume...")
+    print("This will take 15-30 minutes on first run, but only happens once.")
+
+    # Create directory
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Download using huggingface-cli
+    result = subprocess.run([
+        "huggingface-cli", "download",
+        "Wan-AI/Wan2.2-Animate-14B",
+        "--local-dir", str(MODEL_DIR)
+    ], capture_output=True, text=True)
+
+    if result.returncode != 0:
+        raise RuntimeError(f"Model download failed: {result.stderr}")
+
+    # Create marker file to indicate successful download
+    marker_file.touch()
+    print("Model download complete!")
 
 def download_file(url: str, dest: Path) -> Path:
     """Download a file from URL to destination."""
@@ -104,6 +132,9 @@ def handler(job):
     }
     """
     job_input = job["input"]
+
+    # Ensure model is downloaded (first run only)
+    ensure_model_downloaded()
 
     # Create temp directory for this job
     with tempfile.TemporaryDirectory() as temp_dir:

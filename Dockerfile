@@ -30,13 +30,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /workspace
 COPY handler.py /workspace/handler.py
 
-# Download model at build time (makes image large ~50GB but faster cold starts)
-# Comment this out if using network volume instead
-RUN huggingface-cli download Wan-AI/Wan2.2-Animate-14B --local-dir /workspace/Wan2.2-Animate-14B
+# Model will be downloaded at runtime to network volume
+# This keeps build fast and under the 30-minute limit
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV HF_HOME=/workspace/hf_cache
+ENV HF_HOME=/runpod-volume/hf_cache
+ENV MODEL_DIR=/runpod-volume/Wan2.2-Animate-14B
 
 # Start the handler
 CMD ["python", "-u", "/workspace/handler.py"]
