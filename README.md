@@ -126,3 +126,4 @@ If you want faster builds and smaller images:
 **Out of memory**: Reduce resolution or use a larger GPU (H100).
 
 **Video too long**: Split into shorter segments (<30 seconds).
+# Trigger rebuild Sat Jan 17 16:44:27 +07 2026
