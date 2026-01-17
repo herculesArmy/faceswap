@@ -34,6 +34,10 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     omegaconf \
     sam2
 
+# Rebuild flash_attn from source to match PyTorch version
+RUN pip uninstall -y flash-attn && \
+    pip install flash-attn --no-build-isolation
+
 # Copy handler
 WORKDIR /workspace
 COPY handler.py /workspace/handler.py
