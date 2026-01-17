@@ -11,8 +11,17 @@ import requests
 from pathlib import Path
 
 # Paths - Model stored on network volume for persistence
-# Default to /workspace which is the standard RunPod network volume mount point
-MODEL_DIR = Path(os.environ.get("MODEL_DIR", "/workspace/Wan2.2-Animate-14B"))
+# Check both possible mount points (pods use /workspace, serverless uses /runpod-volume)
+def get_model_dir():
+    if os.environ.get("MODEL_DIR"):
+        return Path(os.environ.get("MODEL_DIR"))
+    # Check /runpod-volume first (serverless), then /workspace (pods)
+    for path in ["/runpod-volume/Wan2.2-Animate-14B", "/workspace/Wan2.2-Animate-14B"]:
+        if Path(path).exists():
+            return Path(path)
+    return Path("/runpod-volume/Wan2.2-Animate-14B")  # default for download
+
+MODEL_DIR = get_model_dir()
 WAN_DIR = Path("/workspace/Wan2.2")
 
 def ensure_model_downloaded():
