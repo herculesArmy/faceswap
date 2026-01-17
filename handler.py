@@ -26,10 +26,30 @@ WAN_DIR = Path("/workspace/Wan2.2")
 
 def ensure_model_downloaded():
     """Download model to network volume if not present."""
+    global MODEL_DIR
+    MODEL_DIR = get_model_dir()  # Re-check at runtime
+
     marker_file = MODEL_DIR / ".download_complete"
 
+    # Also check if key model files exist as backup check
+    key_files = [
+        MODEL_DIR / "diffusion_pytorch_model-00001-of-00004.safetensors",
+        MODEL_DIR / "Wan2.1_VAE.pth",
+        MODEL_DIR / "config.json"
+    ]
+
+    print(f"Checking model at: {MODEL_DIR}")
+    print(f"Marker file exists: {marker_file.exists()}")
+    print(f"Model dir exists: {MODEL_DIR.exists()}")
+
     if marker_file.exists():
-        print("Model already downloaded.")
+        print("Model already downloaded (marker file found).")
+        return
+
+    # Check if model files exist even without marker
+    if all(f.exists() for f in key_files):
+        print("Model files found, creating marker file.")
+        marker_file.touch()
         return
 
     print("Model not found. Downloading to network volume...")
