@@ -35,8 +35,7 @@ COPY handler.py /workspace/handler.py
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV HF_HOME=/workspace/hf_cache
-ENV MODEL_DIR=/workspace/Wan2.2-Animate-14B
+# Don't hardcode MODEL_DIR - let handler auto-detect /runpod-volume (serverless) or /workspace (pods)
 
 # Start the handler
 CMD ["python", "-u", "/workspace/handler.py"]
