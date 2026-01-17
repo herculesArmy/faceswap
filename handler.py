@@ -10,6 +10,34 @@ import base64
 import requests
 from pathlib import Path
 
+# Debug: Print filesystem info at startup
+print("=" * 50)
+print("STARTUP DEBUG INFO")
+print("=" * 50)
+print(f"Current directory: {os.getcwd()}")
+print(f"/workspace exists: {os.path.exists('/workspace')}")
+print(f"/runpod-volume exists: {os.path.exists('/runpod-volume')}")
+
+# List contents of potential mount points
+for mount in ['/workspace', '/runpod-volume']:
+    if os.path.exists(mount):
+        try:
+            contents = os.listdir(mount)
+            print(f"{mount} contents: {contents[:10]}...")  # First 10 items
+        except Exception as e:
+            print(f"{mount} error: {e}")
+
+# Check disk space
+import shutil
+for path in ['/', '/workspace', '/runpod-volume']:
+    if os.path.exists(path):
+        try:
+            usage = shutil.disk_usage(path)
+            print(f"{path} disk: {usage.free // (1024**3)}GB free / {usage.total // (1024**3)}GB total")
+        except:
+            pass
+print("=" * 50)
+
 # Paths - Model stored on network volume for persistence
 # Check both possible mount points (pods use /workspace, serverless uses /runpod-volume)
 def get_model_dir():
