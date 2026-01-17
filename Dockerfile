@@ -25,7 +25,14 @@ RUN git clone --depth 1 https://github.com/Wan-Video/Wan2.2.git
 # Install Wan2.2 dependencies
 WORKDIR /workspace/Wan2.2
 RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir loguru onnxruntime-gpu moviepy
+    pip install --no-cache-dir \
+    loguru \
+    onnxruntime-gpu \
+    moviepy \
+    decord \
+    hydra-core \
+    omegaconf \
+    sam2
 
 # Copy handler
 WORKDIR /workspace
