@@ -37,11 +37,10 @@ RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     matplotlib \
     einops
 
-# Verify all imports work (fail fast if something is missing)
+# Verify preprocessing imports work (fail fast if something is missing)
+# Note: Can't verify generation imports (import wan) as it requires CUDA
 RUN cd /workspace/Wan2.2/wan/modules/animate/preprocess && \
     python -c "from process_pipepline import ProcessPipeline; print('✅ Preprocessing imports OK')"
-RUN cd /workspace/Wan2.2 && \
-    python -c "import wan; print('✅ Generation imports OK')"
 
 # Copy handler
 WORKDIR /workspace
