@@ -35,7 +35,8 @@ RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     omegaconf \
     sam2 \
     matplotlib \
-    einops
+    einops \
+    librosa
 
 # Verify preprocessing imports work (fail fast if something is missing)
 # Note: Can't verify generation imports (import wan) as it requires CUDA
