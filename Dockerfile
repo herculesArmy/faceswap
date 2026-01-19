@@ -33,7 +33,12 @@ RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     decord \
     hydra-core \
     omegaconf \
-    sam2
+    sam2 \
+    matplotlib
+
+# Verify all preprocessing imports work (fail fast if something is missing)
+RUN cd /workspace/Wan2.2/wan/modules/animate/preprocess && \
+    python -c "from process_pipepline import ProcessPipeline; print('✅ All preprocessing imports OK')"
 
 # Copy handler
 WORKDIR /workspace
