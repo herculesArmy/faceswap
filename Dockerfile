@@ -22,9 +22,10 @@ RUN pip install --no-cache-dir \
 # Clone Wan2.2 repository
 RUN git clone --depth 1 https://github.com/Wan-Video/Wan2.2.git
 
-# Install Wan2.2 dependencies
+# Install Wan2.2 dependencies (excluding flash_attn which has compatibility issues)
 WORKDIR /workspace/Wan2.2
-RUN pip install --no-cache-dir -r requirements.txt && \
+RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
+    pip install --no-cache-dir -r requirements_no_flash.txt && \
     pip install --no-cache-dir \
     loguru \
     onnxruntime-gpu \
@@ -33,10 +34,6 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     hydra-core \
     omegaconf \
     sam2
-
-# Rebuild flash_attn from source to match PyTorch version
-RUN pip uninstall -y flash-attn && \
-    pip install flash-attn --no-build-isolation
 
 # Copy handler
 WORKDIR /workspace
