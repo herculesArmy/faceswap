@@ -36,7 +36,9 @@ RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     sam2 \
     matplotlib \
     einops \
-    librosa
+    librosa \
+    safetensors \
+    torchaudio
 
 # Verify preprocessing imports work (fail fast if something is missing)
 # Note: Can't verify generation imports (import wan) as it requires CUDA
