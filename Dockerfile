@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir \
 # Clone Wan2.2 repository
 RUN git clone --depth 1 https://github.com/Wan-Video/Wan2.2.git
 
-# Install Wan2.2 dependencies (excluding flash_attn which has compatibility issues)
+# Install Wan2.2 dependencies (excluding flash_attn - will install separately)
 WORKDIR /workspace/Wan2.2
 RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     pip install --no-cache-dir -r requirements_no_flash.txt && \
@@ -40,6 +40,12 @@ RUN grep -v "flash_attn" requirements.txt > requirements_no_flash.txt && \
     safetensors \
     torchaudio \
     peft
+
+# Install flash-attn from pre-built wheel (required for generation)
+# Using wheel from https://github.com/Dao-AILab/flash-attention/releases
+RUN pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.0.post2/flash_attn-2.7.0.post2+cu12torch2.4cxx11abiFALSE-cp311-cp311-linux_x86_64.whl || \
+    pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.6.3/flash_attn-2.6.3+cu123torch2.4cxx11abiFALSE-cp311-cp311-linux_x86_64.whl || \
+    echo "Warning: flash-attn wheel installation failed"
 
 # Verify preprocessing imports work (fail fast if something is missing)
 # Note: Can't verify generation imports (import wan) as it requires CUDA
